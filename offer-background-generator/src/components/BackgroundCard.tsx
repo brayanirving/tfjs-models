@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import type { BackgroundDesign } from '../utils/generator';
 
 interface BackgroundCardProps {
@@ -5,7 +6,7 @@ interface BackgroundCardProps {
   aspectRatio: number;
 }
 
-const BackgroundCard: React.FC<BackgroundCardProps> = ({ design, aspectRatio }) => {
+const BackgroundCard: FC<BackgroundCardProps> = ({ design, aspectRatio }) => {
   return (
     <article
       className="background-card"
@@ -47,29 +48,42 @@ const BackgroundCard: React.FC<BackgroundCardProps> = ({ design, aspectRatio }) 
         />
       ))}
 
-      <div className="poster-content">
-        <span
-          className="badge"
-          style={{ backgroundColor: design.textColors.accent, color: design.palette.primary }}
-        >
-          Oferta Relâmpago
-        </span>
-        <h2 style={{ color: design.textColors.primary }}>Até 70% de desconto</h2>
-        <p style={{ color: design.textColors.secondary }}>Somente hoje em produtos selecionados</p>
-        <button
-          style={{
-            backgroundColor: design.textColors.accent,
-            color: design.palette.primary,
-            boxShadow: `0 12px 24px rgba(0, 0, 0, 0.25)`,
-          }}
-        >
-          Comprar agora
-        </button>
-      </div>
+      <div className="poster-shell">
+        <header className="poster-shell__banner" style={{ backgroundColor: design.ui.bannerBg, color: design.ui.bannerText }}>
+          <span>oferta imbatível</span>
+          <span className="poster-shell__banner-tag" style={{ backgroundColor: design.ui.tagBg, color: design.ui.tagText }}>
+            só hoje
+          </span>
+        </header>
 
-      <footer className="card-footer" style={{ color: design.textColors.secondary }}>
-        Paleta: {design.palette.name}
-      </footer>
+        <div className="poster-shell__body">
+          <div
+            className="poster-shell__info"
+            style={{ backgroundColor: design.ui.infoPanelBg, color: design.ui.infoPanelText }}
+          >
+            <span className="poster-shell__category">hortifruti selecionado</span>
+            <h2>Produto destaque da semana</h2>
+            <p>Reposição fresca com visual agressivo de gôndola.</p>
+          </div>
+
+          <div className="poster-shell__price" style={{ backgroundColor: design.ui.priceBg, color: design.ui.priceText }}>
+            <span className="price__label">por apenas</span>
+            <div className="price__value">
+              <span className="price__currency">R$</span>
+              <span className="price__amount">9</span>
+              <span className="price__cents">,99</span>
+            </div>
+            <span className="price__details">unidade no varejo</span>
+          </div>
+        </div>
+
+        <footer className="poster-shell__footer" style={{ color: design.ui.footerText }}>
+          <span className="poster-shell__stamp" style={{ backgroundColor: design.ui.tagBg, color: design.ui.tagText }}>
+            leve 3 pague 2
+          </span>
+          <span className="poster-shell__palette">Paleta: {design.palette.name}</span>
+        </footer>
+      </div>
     </article>
   );
 };

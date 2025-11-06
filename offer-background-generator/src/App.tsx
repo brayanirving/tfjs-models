@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import BackgroundCard from './components/BackgroundCard';
 import { generateBackgroundDesign } from './utils/generator';
 
@@ -11,7 +11,7 @@ const ASPECT_OPTIONS = [
 
 const DEFAULT_CARDS = 12;
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [aspect, setAspect] = useState<(typeof ASPECT_OPTIONS)[number]>(ASPECT_OPTIONS[1]);
   const [cardCount, setCardCount] = useState(DEFAULT_CARDS);
   const [baseSeed, setBaseSeed] = useState(() => Date.now());
@@ -28,11 +28,11 @@ const App: React.FC = () => {
     <div className="app">
       <header className="app__header">
         <div>
-          <h1>Gerador de backgrounds comerciais</h1>
+          <h1>Construtor de cartazes varejistas</h1>
           <p>
-            Crie centenas de variações responsivas para cartazes de oferta com apenas um clique. Os layouts se
-            adaptam automaticamente a qualquer aspecto, mantendo contraste e hierarquia pensados para comunicação
-            de varejo.
+            Gere fundos vibrantes inspirados no varejo brasileiro em múltiplos formatos. Cada composição respeita a
+            hierarquia típica de ofertas agressivas, com faixas, selos e áreas para preço destacado que funcionam em
+            qualquer aspecto.
           </p>
         </div>
         <div className="controls">
