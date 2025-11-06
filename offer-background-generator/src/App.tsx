@@ -28,11 +28,10 @@ const App: React.FC = () => {
     <div className="app">
       <header className="app__header">
         <div>
-          <h1>Gerador de backgrounds comerciais</h1>
+          <h1>Construtor de cartazes varejistas</h1>
           <p>
-            Crie centenas de variações responsivas para cartazes de oferta com apenas um clique. Os layouts se
-            adaptam automaticamente a qualquer aspecto, mantendo contraste e hierarquia pensados para comunicação
-            de varejo.
+            Monte cartazes com a estética vibrante do varejo brasileiro em diversos formatos. Cada variação cria
+            composições com faixas, preços gigantes e chamadas comerciais prontas para imprimir ou usar no digital.
           </p>
         </div>
         <div className="controls">
@@ -83,8 +82,8 @@ const App: React.FC = () => {
 
       <footer className="app__footer">
         <p>
-          Dica: exporte os fundos com a ferramenta de captura do seu navegador ou integre este gerador à sua pipeline
-          para automatizar campanhas promocionais.
+          Dica: exporte os cartazes direto do navegador ou conecte este gerador à sua rotina para abastecer campanhas
+          promocionais diariamente.
         </p>
       </footer>
     </div>

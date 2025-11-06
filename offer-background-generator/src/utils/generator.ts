@@ -1,4 +1,13 @@
 import { palettes, type ColorPalette } from '../data/palettes';
+import {
+  footerNotes,
+  generalHighlights,
+  offerBadges,
+  priceConditions,
+  priceLabels,
+  retailProducts,
+  type RetailProduct,
+} from '../data/retailCopy';
 
 export interface BackgroundDecoration {
   id: string;
@@ -24,12 +33,15 @@ export interface BackgroundDesign {
     primary: string;
     secondary: string;
     accent: string;
+    ink: string;
+    price: string;
   };
   spotlight?: {
     color: string;
     size: number;
     intensity: number;
   };
+  offer: OfferContent;
 }
 
 export interface GeneratorOptions {
@@ -126,6 +138,51 @@ const mixModes: BackgroundDecoration['mixBlendMode'][] = ['overlay', 'screen', '
 
 const randomRadius = (random: RandomFn) => `${clamp(random(), 0.2, 0.6) * 100}%`;
 
+export interface OfferContent {
+  badge: string;
+  category: string;
+  product: string;
+  detail: string;
+  highlight: string;
+  priceLabel: string;
+  priceReais: string;
+  priceCents: string;
+  priceCondition: string;
+  footer: string;
+}
+
+const generatePrice = (product: RetailProduct, random: RandomFn) => {
+  const value = product.minPrice + random() * (product.maxPrice - product.minPrice);
+  const rounded = Math.max(product.minPrice, Math.min(product.maxPrice, Math.round(value * 20) / 20));
+  const [reais, cents] = rounded.toFixed(2).split('.');
+  return { reais, cents };
+};
+
+const buildOfferContent = (random: RandomFn): OfferContent => {
+  const product = randomFromArray(retailProducts, random);
+  const price = generatePrice(product, random);
+  const badge = randomFromArray(offerBadges, random);
+  const priceLabel = randomFromArray(priceLabels, random);
+  const highlightOptions = [...product.highlights, ...generalHighlights];
+  const highlight = randomFromArray(highlightOptions, random);
+  const conditionTemplate = randomFromArray(priceConditions, random);
+  const priceCondition = conditionTemplate.replace('{detail}', product.detail);
+  const footer = randomFromArray(footerNotes, random);
+
+  return {
+    badge,
+    category: product.category,
+    product: product.name,
+    detail: product.detail,
+    highlight,
+    priceLabel,
+    priceReais: price.reais,
+    priceCents: price.cents,
+    priceCondition,
+    footer,
+  };
+};
+
 const generateDecoration = (
   palette: ColorPalette,
   random: RandomFn,
@@ -197,7 +254,11 @@ export const generateBackgroundDesign = (seed: number, options: GeneratorOptions
     primary: palette.neutrals[0],
     secondary: palette.neutrals[1] ?? palette.neutrals[0],
     accent: randomFromArray([...palette.accents, palette.secondary], random),
+    ink: palette.ink,
+    price: palette.price,
   };
+
+  const offer = buildOfferContent(random);
 
   return {
     palette,
@@ -205,5 +266,6 @@ export const generateBackgroundDesign = (seed: number, options: GeneratorOptions
     decorations,
     textColors,
     spotlight,
+    offer,
   };
 };
