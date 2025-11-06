@@ -20,10 +20,16 @@ export interface BackgroundDesign {
   palette: ColorPalette;
   backgroundLayers: string[];
   decorations: BackgroundDecoration[];
-  textColors: {
-    primary: string;
-    secondary: string;
-    accent: string;
+  ui: {
+    bannerBg: string;
+    bannerText: string;
+    infoPanelBg: string;
+    infoPanelText: string;
+    priceBg: string;
+    priceText: string;
+    tagBg: string;
+    tagText: string;
+    footerText: string;
   };
   spotlight?: {
     color: string;
@@ -74,6 +80,30 @@ const hexToRgb = (hex: string) => {
     g: (bigint >> 8) & 255,
     b: bigint & 255,
   };
+};
+
+const getLuminance = ({ r, g, b }: { r: number; g: number; b: number }) => {
+  const normalize = (value: number) => {
+    const channel = value / 255;
+    return channel <= 0.03928 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4);
+  };
+
+  const rLum = normalize(r);
+  const gLum = normalize(g);
+  const bLum = normalize(b);
+
+  return 0.2126 * rLum + 0.7152 * gLum + 0.0722 * bLum;
+};
+
+const getContrastColor = (hex: string) => {
+  const rgb = hexToRgb(hex);
+  const luminance = getLuminance(rgb);
+  return luminance > 0.55 ? '#0f172a' : '#ffffff';
+};
+
+const withAlpha = (hex: string, alpha: number) => {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 const gradientStrategies = [
@@ -193,17 +223,26 @@ export const generateBackgroundDesign = (seed: number, options: GeneratorOptions
       }
     : undefined;
 
-  const textColors = {
-    primary: palette.neutrals[0],
-    secondary: palette.neutrals[1] ?? palette.neutrals[0],
-    accent: randomFromArray([...palette.accents, palette.secondary], random),
+  const infoBase = palette.neutrals[1] ?? palette.neutrals[0];
+  const priceBackground = randomFromArray([palette.secondary, ...palette.accents], random);
+  const tagBackground = random() > 0.5 ? palette.secondary : randomFromArray(palette.accents, random);
+  const ui = {
+    bannerBg: palette.primary,
+    bannerText: getContrastColor(palette.primary),
+    infoPanelBg: withAlpha(infoBase, 0.92),
+    infoPanelText: getContrastColor(infoBase),
+    priceBg: priceBackground,
+    priceText: getContrastColor(priceBackground),
+    tagBg: tagBackground,
+    tagText: getContrastColor(tagBackground),
+    footerText: '#ffffff',
   };
 
   return {
     palette,
     backgroundLayers: layers,
     decorations,
-    textColors,
+    ui,
     spotlight,
   };
 };
