@@ -28,11 +28,11 @@ const App: React.FC = () => {
     <div className="app">
       <header className="app__header">
         <div>
-          <h1>Gerador de backgrounds comerciais</h1>
+          <h1>Construtor de cartazes para ofertas de varejo</h1>
           <p>
-            Crie centenas de variações responsivas para cartazes de oferta com apenas um clique. Os layouts se
-            adaptam automaticamente a qualquer aspecto, mantendo contraste e hierarquia pensados para comunicação
-            de varejo.
+            Monte cartazes com cara de gôndola brasileira em segundos. Escolha o aspecto, gere dezenas de variações
+            e receba composições com faixas, blocos de preço e chamadas prontas para personalizar produtos do seu
+            tabloide.
           </p>
         </div>
         <div className="controls">

@@ -1,4 +1,13 @@
 import { palettes, type ColorPalette } from '../data/palettes';
+import {
+  badgeOptions,
+  ctaPhrases,
+  footerNotes,
+  installmentTemplates,
+  offerCatalog,
+  priceLabels,
+  unitNotes,
+} from '../data/offers';
 
 export interface BackgroundDecoration {
   id: string;
@@ -30,6 +39,23 @@ export interface BackgroundDesign {
     size: number;
     intensity: number;
   };
+  offer: OfferContent;
+}
+
+export interface OfferContent {
+  badge: string;
+  sector: string;
+  category: string;
+  product: string;
+  detail: string;
+  priceLabel: string;
+  priceInteger: string;
+  priceCents: string;
+  unitNote: string;
+  unitValue: string;
+  installment?: string;
+  cta: string;
+  footer: string;
 }
 
 export interface GeneratorOptions {
@@ -126,6 +152,43 @@ const mixModes: BackgroundDecoration['mixBlendMode'][] = ['overlay', 'screen', '
 
 const randomRadius = (random: RandomFn) => `${clamp(random(), 0.2, 0.6) * 100}%`;
 
+const formatCurrency = (value: number) => `R$ ${value.toFixed(2).replace('.', ',')}`;
+
+const generateOffer = (random: RandomFn): OfferContent => {
+  const template = randomFromArray(offerCatalog, random);
+  const badge = randomFromArray(badgeOptions, random);
+  const priceLabel = randomFromArray(priceLabels, random);
+  const cents = randomFromArray(['99', '89', '79', '69', '59', '49', '39'], random);
+  const integer = Math.max(2, Math.floor(clamp(random(), 0.12, 0.98) * 320));
+  const priceInteger = integer.toString();
+  const numericPrice = parseFloat(`${integer}.${cents}`);
+  const unitTemplate = randomFromArray(unitNotes, random);
+  const unitNote = unitTemplate.includes('{{unit}}')
+    ? unitTemplate.replace('{{unit}}', template.unit)
+    : unitTemplate;
+  const unitValue = formatCurrency(numericPrice);
+  const includeInstallment = random() > 0.65;
+  const installment = includeInstallment ? randomFromArray(installmentTemplates, random) : undefined;
+  const cta = randomFromArray(ctaPhrases, random);
+  const footer = randomFromArray(footerNotes, random);
+
+  return {
+    badge,
+    sector: template.sector,
+    category: template.category,
+    product: template.product,
+    detail: template.detail,
+    priceLabel,
+    priceInteger,
+    priceCents: cents,
+    unitNote,
+    unitValue,
+    installment,
+    cta,
+    footer,
+  };
+};
+
 const generateDecoration = (
   palette: ColorPalette,
   random: RandomFn,
@@ -205,5 +268,6 @@ export const generateBackgroundDesign = (seed: number, options: GeneratorOptions
     decorations,
     textColors,
     spotlight,
+    offer: generateOffer(random),
   };
 };
